@@ -66,13 +66,13 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-6 shadow-xs transition-colors">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-6 shadow-xs transition-colors">
       {/* Header with Export Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-[#09843B] dark:text-emerald-400" />
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+            <BarChart3 className="w-5 h-5 text-[#09843B] dark:text-emerald-400 shrink-0" />
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
               Métricas de Rendimiento y Utilización de Periféricos
             </h3>
           </div>
@@ -81,7 +81,7 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {onOpenLiveReport && (
             <button
               onClick={onOpenLiveReport}
@@ -105,13 +105,13 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
       </div>
 
       {/* KPI Cards Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-4 space-y-1 shadow-2xs">
+      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
+        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-medium">
             <span>Eficiencia CPU</span>
-            <Cpu className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
+            <Cpu className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-[#09843B] dark:text-emerald-400 tabular-nums">
+          <div className="text-xl sm:text-2xl font-bold font-mono text-[#09843B] dark:text-emerald-400 tabular-nums">
             {cpuEfficiency}%
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -119,34 +119,34 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
           </div>
         </div>
 
-        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-4 space-y-1 shadow-2xs">
+        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-medium">
             <span>Espera Promedio</span>
-            <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <Clock className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
+          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
             {avgWaitTime} <span className="text-xs font-normal text-slate-500 dark:text-slate-400">ticks</span>
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400">Tiempo en colas de E/S</div>
         </div>
 
-        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-4 space-y-1 shadow-2xs">
+        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-medium">
             <span>Servicio Promedio</span>
-            <Gauge className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+            <Gauge className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
+          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
             {avgServiceTime} <span className="text-xs font-normal text-slate-500 dark:text-slate-400">ticks</span>
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400">Tiempo en controlador</div>
         </div>
 
-        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-4 space-y-1 shadow-2xs">
+        <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200/90 dark:border-slate-700/80 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-medium">
             <span>Solicitudes Atendidas</span>
-            <CheckCircle2 className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
           </div>
-          <div className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
+          <div className="text-xl sm:text-2xl font-bold font-mono text-slate-900 dark:text-slate-100 tabular-nums">
             {totalCompleted}{' '}
             {totalFailed > 0 && <span className="text-xs text-rose-600 dark:text-rose-400">({totalFailed} err)</span>}
           </div>
@@ -155,8 +155,8 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
       </div>
 
       {/* Device Utilization Bars Table */}
-      <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-4 space-y-3.5 shadow-2xs">
-        <div className="flex items-center justify-between">
+      <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl p-3.5 sm:p-4 space-y-3.5 shadow-2xs">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
             Utilización de Hardware por Dispositivo
           </span>
@@ -173,16 +173,16 @@ export const MetricsDashboard: React.FC<MetricsDashboardProps> = ({
 
             return (
               <div key={dev.id} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-slate-900 dark:text-slate-100">{dev.displayName}</span>
                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium">IRQ {dev.irqNumber}</span>
                   </div>
-                  <div className="flex items-center gap-4 text-xs font-mono text-slate-700 dark:text-slate-300">
-                    <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">
+                  <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-0.5 text-[11px] sm:text-xs font-mono text-slate-700 dark:text-slate-300">
+                    <span className="text-slate-500 dark:text-slate-400">
                       Espera: <span className="text-slate-800 dark:text-slate-100 font-bold">{avgDevWait}t</span>
                     </span>
-                    <span className="text-slate-500 dark:text-slate-400 hidden sm:inline">
+                    <span className="text-slate-500 dark:text-slate-400">
                       Atendidas: <span className="text-[#09843B] dark:text-emerald-400 font-bold">{dev.metrics.totalHandled}</span>
                     </span>
                     <span className="font-bold text-slate-900 dark:text-slate-100 tabular-nums">{utilizationPct}% ocupado</span>

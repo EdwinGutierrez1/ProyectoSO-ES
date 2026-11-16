@@ -71,21 +71,21 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 space-y-3 shadow-xs transition-colors">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3 shadow-xs transition-colors">
       {/* Header and Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
+          <Terminal className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
           <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Registro de Eventos del Kernel (Kernel I/O Log)
           </h3>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-medium border border-slate-200 dark:border-slate-700">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-medium border border-slate-200 dark:border-slate-700 shrink-0">
             {logs.length} eventos
           </span>
         </div>
 
         {/* Filter buttons */}
-        <div className="flex items-center gap-1.5 text-xs">
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
           <button
             onClick={() => setFilterSeverity('ALL')}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
@@ -130,19 +130,21 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
       </div>
 
       {/* Terminal Scroll Container */}
-      <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 max-h-60 overflow-y-auto space-y-2 font-mono text-xs shadow-inner">
+      <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 sm:p-3 max-h-60 overflow-y-auto space-y-2 font-mono text-xs shadow-inner">
         {filteredLogs.length > 0 ? (
           filteredLogs.map((log) => (
             <div
               key={log.id}
-              className="flex items-start gap-2.5 pb-2 border-b border-slate-200/70 dark:border-slate-800/80 last:border-none last:pb-0"
+              className="flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-2.5 pb-2 border-b border-slate-200/70 dark:border-slate-800/80 last:border-none last:pb-0"
             >
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 shrink-0 select-none font-bold">
-                [{log.timestamp}] T{log.tick}
-              </span>
-              <div className="shrink-0">{getSeverityBadge(log.severity)}</div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 select-none font-bold">
+                  [{log.timestamp}] T{log.tick}
+                </span>
+                <div>{getSeverityBadge(log.severity)}</div>
+              </div>
               <div className="flex-1 min-w-0">
-                <div className="text-slate-900 dark:text-slate-100 font-bold text-[11px] truncate">
+                <div className="text-slate-900 dark:text-slate-100 font-bold text-[11px] break-words">
                   {log.title}
                 </div>
                 <div className="text-slate-600 dark:text-slate-300 text-[10px] break-words leading-tight mt-0.5">

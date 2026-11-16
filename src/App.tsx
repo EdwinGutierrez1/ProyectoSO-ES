@@ -236,10 +236,10 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 overflow-x-hidden">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6 overflow-x-hidden">
         {/* Tab 1: Interactive Simulator (Hardware, Peripherals, Architecture & Metrics) */}
         {currentTab === 'simulator' && (
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             {/* Simulation Controls Toolbar */}
             <SimulationControls
               isRunning={isRunning}
@@ -265,17 +265,17 @@ export default function App() {
 
             {/* 4 Peripheral Devices Cards Grid */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#09843B]" />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-3">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-[#0ca54a] shrink-0" />
                   <span>Dispositivos de Entrada/Salida Simulados (Página 12)</span>
                 </h3>
-                <span className="text-xs text-slate-500 font-medium">
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   Teclado (IRQ 1) · Disco (IRQ 14) · Impresora (IRQ 7) · Red (IRQ 11)
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                 {(['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'] as DeviceType[]).map((devId) => (
                   <DeviceCard
                     key={devId}
@@ -441,7 +441,7 @@ export default function App() {
           </div>
 
           {/* Bottom Copyright & Accreditation Line */}
-          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
+          <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left">
             <p>
               © 2026 Universidad Simón Bolívar · Ingeniería de Sistemas · Sistemas Operativos V Semestre
             </p>

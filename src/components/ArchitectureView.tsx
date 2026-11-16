@@ -41,15 +41,15 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
   const isrPct = Math.round((cpu.isrCycles / totalCycles) * 100);
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-6 shadow-xs transition-colors">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-5 sm:space-y-6 shadow-xs transition-colors">
       {/* Top Banner: Architecture Title & Mode Indicators */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
               Arquitectura del Subsistema de Entrada/Salida
             </h2>
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700 shrink-0">
               Tick: {tickCount}
             </span>
           </div>
@@ -59,8 +59,8 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
         </div>
 
         {/* Mechanism state display */}
-        <div className="flex items-center gap-3 text-xs">
-          <div className="px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-2 shadow-xs">
+        <div className="flex items-center gap-3 text-xs shrink-0">
+          <div className="px-3 sm:px-3.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-1.5 sm:gap-2 shadow-xs">
             <span className="text-slate-500 dark:text-slate-400 font-medium">Mecanismo Activo:</span>
             <span className={`font-bold ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
               {mode === 'INTERRUPTS' ? 'E/S por Interrupciones (IRQ + ISR)' : 'E/S por Sondeo (Busy-Waiting Polling)'}
@@ -124,14 +124,14 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
             </div>
 
             {/* CPU Registers summary */}
-            <div className="grid grid-cols-2 gap-2 mt-3 text-xs font-mono">
-              <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+            <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2 mt-3 text-xs font-mono">
+              <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 min-w-0">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-sans">Registro EFLAGS</span>
-                <span className="text-slate-800 dark:text-slate-200 font-bold">
+                <span className="text-slate-800 dark:text-slate-200 font-bold break-words">
                   IF={mode === 'INTERRUPTS' ? '1 (INT ON)' : '0 (INT OFF)'}
                 </span>
               </div>
-              <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 min-w-0">
                 <span className="text-slate-500 dark:text-slate-400 block text-[10px] uppercase font-sans">Vector IVT</span>
                 <span className={cpu.activeIrq !== null ? 'text-purple-700 dark:text-purple-300 font-bold' : 'text-slate-500 dark:text-slate-400 font-bold'}>
                   {cpu.activeIrq !== null ? `0x2${cpu.activeIrq.toString(16).toUpperCase()}` : '0x00'}
@@ -211,17 +211,17 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
                 return (
                   <div
                     key={dev.id}
-                    className={`flex items-center justify-between px-2.5 py-1 rounded-lg transition-colors ${
+                    className={`flex items-center justify-between gap-2 px-2.5 py-1 rounded-lg transition-colors ${
                       isAsserted
                         ? 'bg-purple-100 dark:bg-purple-950/70 border border-purple-300 dark:border-purple-700 text-purple-900 dark:text-purple-200 font-semibold'
                         : 'bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                   >
-                    <span className="flex items-center gap-1.5">
-                      <span className="font-bold text-slate-800 dark:text-slate-100">IRQ {dev.irqNumber}</span>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400">({dev.displayName})</span>
+                    <span className="flex items-center gap-1.5 min-w-0">
+                      <span className="font-bold text-slate-800 dark:text-slate-100 shrink-0">IRQ {dev.irqNumber}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate">({dev.displayName})</span>
                     </span>
-                    <span className={isAsserted ? 'text-purple-700 dark:text-purple-300 font-bold animate-pulse' : 'text-slate-400 dark:text-slate-500'}>
+                    <span className={`shrink-0 ${isAsserted ? 'text-purple-700 dark:text-purple-300 font-bold animate-pulse' : 'text-slate-400 dark:text-slate-500'}`}>
                       {isAsserted ? 'ACTIVO' : 'EN ESPERA'}
                     </span>
                   </div>
@@ -232,23 +232,23 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
 
           {/* System Bus Diagram */}
           <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 space-y-2 shadow-2xs">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-1 text-xs">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
                 Bus del Sistema
               </span>
               <span className="text-[10px] text-[#09843B] dark:text-emerald-400 font-mono font-semibold">64-bit FSB / PCIe</span>
             </div>
 
-            <div className="space-y-1.5 text-[11px] font-mono">
-              <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between">
+            <div className="space-y-1.5 text-[10px] sm:text-[11px] font-mono">
+              <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 flex flex-wrap items-center justify-between gap-1">
                 <span className="text-[#09843B] dark:text-emerald-400 font-semibold">Bus de Control</span>
                 <span className="text-emerald-700 dark:text-emerald-300">IOR / IOW / INTA</span>
               </div>
-              <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 flex items-center justify-between">
+              <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 flex flex-wrap items-center justify-between gap-1">
                 <span className="text-amber-800 dark:text-amber-300 font-semibold">Bus de Direcciones</span>
                 <span className="text-amber-700 dark:text-amber-400">I/O Ports: 0x60 - 0x3F8</span>
               </div>
-              <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex items-center justify-between">
+              <div className="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 flex flex-wrap items-center justify-between gap-1">
                 <span className="text-blue-800 dark:text-blue-300 font-semibold">Bus de Datos</span>
                 <span className="text-blue-700 dark:text-blue-400">Data Stream (FIFO/DMA)</span>
               </div>
@@ -285,17 +285,17 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
                   }`}
                 >
                   {/* Header of Device Controller */}
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[#09843B] dark:text-emerald-400">{getDeviceIcon(dev.id)}</span>
-                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{dev.displayName}</span>
+                  <div className="flex flex-wrap items-center justify-between gap-1 mb-1.5">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="text-[#09843B] dark:text-emerald-400 shrink-0">{getDeviceIcon(dev.id)}</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">{dev.displayName}</span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold">IRQ {dev.irqNumber}</span>
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold shrink-0">IRQ {dev.irqNumber}</span>
                   </div>
 
                   {/* Registers Display */}
                   <div className="space-y-1 font-mono text-[10px]">
-                    <div className="flex items-center justify-between bg-slate-100 dark:bg-slate-900/90 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700/80">
+                    <div className="flex flex-wrap items-center justify-between gap-1 bg-slate-100 dark:bg-slate-900/90 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700/80">
                       <span className="text-slate-500 dark:text-slate-400">STATUS_REG:</span>
                       <span
                         className={`font-bold ${
@@ -313,7 +313,7 @@ export const ArchitectureView: React.FC<ArchitectureViewProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between bg-slate-100 dark:bg-slate-900/90 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700/80">
+                    <div className="flex flex-wrap items-center justify-between gap-1 bg-slate-100 dark:bg-slate-900/90 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700/80">
                       <span className="text-slate-500 dark:text-slate-400">CONTROL_REG:</span>
                       <span className="text-slate-700 dark:text-slate-300 font-medium">
                         {dev.registers.control.rawHex} (IE={dev.registers.control.interruptEnable ? '1' : '0'})

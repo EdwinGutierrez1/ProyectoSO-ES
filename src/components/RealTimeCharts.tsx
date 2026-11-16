@@ -69,7 +69,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
         : '';
 
     return (
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
         {/* Horizontal gridlines */}
         {[0, 25, 50, 75, 100].map((level) => {
           const y = padY + chartH - (level / 100) * chartH;
@@ -151,7 +151,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
     const strokeColor = '#09843B';
 
     return (
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
         {/* Gridlines */}
         {[0, Math.round(maxCompleted / 2), maxCompleted].map((val, idx) => {
           const y = padY + chartH - (val / maxCompleted) * chartH;
@@ -188,16 +188,16 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-5 shadow-xs transition-colors">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-5 shadow-xs transition-colors">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div>
-          <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-[#09843B] dark:text-emerald-400" />
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <Activity className="w-5 h-5 text-[#09843B] dark:text-emerald-400 shrink-0" />
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
               Gráficas de Comportamiento en Tiempo Real
             </h3>
-            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[#09843B] dark:text-emerald-400 text-[10px] font-bold border border-emerald-200 dark:border-emerald-800">
+            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[#09843B] dark:text-emerald-400 text-[10px] font-bold border border-emerald-200 dark:border-emerald-800 shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#09843B] dark:bg-emerald-400 animate-pulse" />
               <span>Tick {tickCount}</span>
             </span>
@@ -207,7 +207,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-mono font-semibold">
+        <div className="flex items-center gap-2.5 text-xs font-mono font-semibold shrink-0">
           <span className="text-slate-500 dark:text-slate-400 font-sans">Eficiencia en Vivo:</span>
           <span className={`text-base font-bold ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
             {currentEff}%
@@ -216,24 +216,24 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
       </div>
 
       {/* Grid of 2 Live SVG Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
         {/* Live Chart 1 */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
-          <div className="flex items-center justify-between text-xs">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
+              <TrendingUp className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
               <span>Eficiencia de CPU en Tiempo Real (% Útil vs Ticks)</span>
             </span>
-            <span className={`font-mono text-xs font-bold ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+            <span className={`font-mono text-xs font-bold shrink-0 ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
               {currentEff}%
             </span>
           </div>
 
-          <div className="h-48 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
+          <div className="h-44 sm:h-48 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
             {renderEfficiencyChart()}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
             <span>Útiles: <strong className="text-slate-800 dark:text-slate-200">{cpu.usefulCycles}</strong></span>
             <span>Sondeo: <strong className="text-amber-700 dark:text-amber-400">{cpu.pollingCycles}</strong></span>
             <span>ISR: <strong className="text-purple-700 dark:text-purple-300">{cpu.isrCycles}</strong></span>
@@ -241,22 +241,22 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
         </div>
 
         {/* Live Chart 2 */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
-          <div className="flex items-center justify-between text-xs">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-              <Gauge className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
-              <span>Throughput Acumulado (Solicitudes Completadas en Vivo)</span>
+              <Gauge className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
+              <span>Throughput Acumulado (Solicitudes Completadas)</span>
             </span>
-            <span className="font-mono text-xs font-bold text-[#09843B] dark:text-emerald-400">
+            <span className="font-mono text-xs font-bold text-[#09843B] dark:text-emerald-400 shrink-0">
               {completedRequests.length} tareas
             </span>
           </div>
 
-          <div className="h-48 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
+          <div className="h-44 sm:h-48 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
             {renderThroughputChart()}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
             <span>Completadas: <strong className="text-[#09843B] dark:text-emerald-400">{completedRequests.length}</strong></span>
             <span>Fallidas: <strong className="text-rose-600 dark:text-rose-400">{failedRequests.length}</strong></span>
             <span>Ticks: <strong className="text-slate-800 dark:text-slate-200">{tickCount}</strong></span>
@@ -265,8 +265,8 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
       </div>
 
       {/* Live Per-Device Wait Times */}
-      <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
-        <div className="flex items-center justify-between text-xs pb-1 border-b border-slate-200/60 dark:border-slate-700">
+      <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs pb-1 border-b border-slate-200/60 dark:border-slate-700">
           <span className="font-bold text-slate-800 dark:text-slate-200">
             Tiempos de Espera y Latencia por Periférico (Calculado de la Simulación Activa)
           </span>
@@ -275,7 +275,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-3">
           {(['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'] as const).map((devId) => {
             const dev = devices[devId];
             const avgWait =

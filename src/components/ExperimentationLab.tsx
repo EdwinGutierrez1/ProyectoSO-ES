@@ -82,10 +82,10 @@ export const ExperimentationLab: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Overview Header */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
         <div className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a]" />
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+          <Activity className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a] shrink-0" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
             Reto de Experimentación: Inyección de Retrasos y Fallos de Hardware
           </h2>
         </div>
@@ -151,7 +151,7 @@ export const ExperimentationLab: React.FC = () => {
         <div className="pt-2 flex justify-end">
           <button
             onClick={handleRunExperiment}
-            className="px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+            className="w-full sm:w-auto justify-center px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all cursor-pointer"
           >
             <Activity className="w-4 h-4" />
             <span>Ejecutar Prueba de Resiliencia</span>
@@ -161,27 +161,27 @@ export const ExperimentationLab: React.FC = () => {
 
       {/* Results Comparison Grid */}
       {activeExpResults && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           {/* Polling Result */}
-          <div className="bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-700/60 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <RefreshCw className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+          <div className="bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-700/60 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 min-w-0">
+                <RefreshCw className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Comportamiento en Sondeo (Polling)</h3>
               </div>
-              <span className="text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded font-bold border border-amber-200 dark:border-amber-800/60">
+              <span className="text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 px-2 py-0.5 rounded font-bold border border-amber-200 dark:border-amber-800/60 shrink-0">
                 Alta Vulnerabilidad
               </span>
             </div>
 
             <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                 <span className="text-slate-600 dark:text-slate-400 font-sans">Ciclos de CPU desperdiciados:</span>
-                <span className="text-base font-bold text-amber-600 dark:text-amber-400">
+                <span className="text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400">
                   {activeExpResults.pollingLostCycles} ciclos perdidos
                 </span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                 <span className="text-slate-600 dark:text-slate-400 font-sans">Impacto en la CPU:</span>
                 <span className="text-rose-600 dark:text-rose-400 font-bold">Bloqueo por espera activa (100% busy)</span>
               </div>
@@ -194,25 +194,25 @@ export const ExperimentationLab: React.FC = () => {
           </div>
 
           {/* Interrupts Result */}
-          <div className="bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a]" />
+          <div className="bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 min-w-0">
+                <Zap className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a] shrink-0" />
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">Comportamiento en Interrupciones (IRQ)</h3>
               </div>
-              <span className="text-xs text-[#09843B] dark:text-[#0ca54a] bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded font-bold border border-emerald-200 dark:border-emerald-800/60">
+              <span className="text-xs text-[#09843B] dark:text-[#0ca54a] bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded font-bold border border-emerald-200 dark:border-emerald-800/60 shrink-0">
                 Alta Resiliencia
               </span>
             </div>
 
             <div className="space-y-3 font-mono text-xs">
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                 <span className="text-slate-600 dark:text-slate-400 font-sans">Ciclos de CPU desperdiciados:</span>
-                <span className="text-base font-bold text-[#09843B] dark:text-[#0ca54a]">
+                <span className="text-sm sm:text-base font-bold text-[#09843B] dark:text-[#0ca54a]">
                   0 ciclos (Solo {activeExpResults.irqLostCycles} de ISR)
                 </span>
               </div>
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
                 <span className="text-slate-600 dark:text-slate-400 font-sans">Impacto en la CPU:</span>
                 <span className="text-[#09843B] dark:text-[#0ca54a] font-bold">Cero bloqueo (CPU disponible para usuario)</span>
               </div>
@@ -228,7 +228,7 @@ export const ExperimentationLab: React.FC = () => {
 
       {/* Analysis Card */}
       {activeExpResults && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-2.5 shadow-xs">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#09843B] dark:text-[#0ca54a]" />
             <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">

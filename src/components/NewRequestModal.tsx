@@ -82,34 +82,34 @@ export const NewRequestModal: React.FC<NewRequestModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm">
+      <div className="relative w-full max-w-lg max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80">
-          <div className="flex items-center gap-2.5">
-            <div className="p-1.5 rounded-lg bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="p-1.5 rounded-lg bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a] shrink-0">
               <Plus className="w-5 h-5" />
             </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">Generar Solicitud de E/S</h3>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Inyectar carga de trabajo al bus del sistema</p>
+            <div className="min-w-0">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 truncate">Generar Solicitud de E/S</h3>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">Inyectar carga de trabajo al bus del sistema</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 text-xs flex-1 overflow-y-auto">
           <div>
             <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
               Dispositivo Destino
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2">
               {(['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'] as DeviceType[]).map((d) => (
                 <button
                   type="button"
@@ -130,7 +130,7 @@ export const NewRequestModal: React.FC<NewRequestModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1">
                 Tipo de Operación
@@ -174,8 +174,8 @@ export const NewRequestModal: React.FC<NewRequestModalProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2">
               <label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-1">
                 Descripción / Payload
               </label>
@@ -219,7 +219,7 @@ export const NewRequestModal: React.FC<NewRequestModalProps> = ({
             </label>
           </div>
 
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-2">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-end gap-2">
             <button
               type="button"
               onClick={onClose}

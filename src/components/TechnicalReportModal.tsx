@@ -24,23 +24,32 @@ export const TechnicalReportModal: React.FC<TechnicalReportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm">
+      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a] border border-[#09843B]/20">
-              <FileText className="w-5 h-5" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-800/80 shrink-0">
+          <div className="flex items-start sm:items-center justify-between gap-3 min-w-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 rounded-lg bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a] border border-[#09843B]/20 shrink-0">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">Informe Técnico y Sustentación</h2>
+                <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                  Universidad Simón Bolívar · Sistemas Operativos V Semestre · Documento de Entrega
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Informe Técnico y Sustentación</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Universidad Simón Bolívar · Sistemas Operativos V Semestre · Documento de Entrega
-              </p>
-            </div>
+            <button
+              onClick={onClose}
+              className="sm:hidden p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
+              aria-label="Cerrar informe técnico"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
             <button
               onClick={handlePrintOrDownload}
               className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-sm transition-colors cursor-pointer"
@@ -51,7 +60,8 @@ export const TechnicalReportModal: React.FC<TechnicalReportModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="hidden sm:inline-flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Cerrar informe técnico"
             >
               <X className="w-5 h-5" />
             </button>
@@ -59,9 +69,9 @@ export const TechnicalReportModal: React.FC<TechnicalReportModalProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 sm:p-8 space-y-6 text-slate-700 dark:text-slate-300 text-sm max-h-[80vh] overflow-y-auto leading-relaxed">
+        <div className="p-4 sm:p-8 space-y-6 text-slate-700 dark:text-slate-300 text-sm flex-1 overflow-y-auto leading-relaxed">
           {/* Academic Header with Official USB Vertical Logo */}
-          <div className="p-6 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm text-center space-y-3">
+          <div className="p-4 sm:p-6 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm text-center space-y-3">
             <div className="flex justify-center mb-1">
               <div className="p-2 bg-white dark:bg-transparent rounded-xl shadow-xs dark:shadow-none inline-block">
                 {/* Light mode logo */}
@@ -259,13 +269,13 @@ export const TechnicalReportModal: React.FC<TechnicalReportModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-2.5 shrink-0">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center sm:text-left">
             Universidad Simón Bolívar · Ingeniería de Sistemas · Docente: <strong className="text-slate-800 dark:text-slate-200">MSc. Alvaro Salamanca</strong> · Autores: Katherine Peñaloza & Edwin Gutierrez
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-[#09843B] hover:bg-[#07692e] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-semibold text-xs transition-colors cursor-pointer shadow-sm"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-[#09843B] hover:bg-[#07692e] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-semibold text-xs transition-colors cursor-pointer shadow-sm shrink-0"
           >
             Cerrar Informe
           </button>

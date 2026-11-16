@@ -19,7 +19,6 @@ import {
   Moon,
   Menu,
   X,
-  Sparkles,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -59,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur sticky top-0 z-40 shadow-xs w-full max-w-full transition-colors">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-2 sm:gap-4 h-16 sm:h-20">
+        <div className="flex items-center justify-between gap-2 sm:gap-3 h-16 sm:h-20">
           {/* Zone 1: Universidad Simón Bolívar Logo & Project Title */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
             <a
@@ -85,9 +84,9 @@ export const Header: React.FC<HeaderProps> = ({
                 />
               </div>
 
-              <div className="h-7 sm:h-8 w-px bg-slate-200 dark:bg-slate-700 hidden min-[520px]:block shrink-0" />
+              <div className="h-7 sm:h-8 w-px bg-slate-200 dark:bg-slate-700 hidden min-[480px]:block shrink-0" />
 
-              <div className="min-w-0 hidden min-[520px]:block">
+              <div className="min-w-0 hidden min-[480px]:block">
                 <div className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100 group-hover:text-[#09843B] dark:group-hover:text-[#0ca54a] transition-colors truncate">
                   I/O Simulator
                 </div>
@@ -99,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Zone 2: Desktop Navigation Links (Visible on xl screens and wider) */}
-          <nav className="hidden xl:flex items-center gap-5 text-sm font-medium text-slate-600 dark:text-slate-300">
+          <nav className="hidden xl:flex items-center gap-3.5 2xl:gap-5 text-xs 2xl:text-sm font-medium text-slate-600 dark:text-slate-300">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -112,13 +111,13 @@ export const Header: React.FC<HeaderProps> = ({
                       onOpenReport();
                     }
                   }}
-                  className={`flex items-center gap-2 transition-all whitespace-nowrap shrink-0 py-2 border-b-2 font-medium cursor-pointer ${
+                  className={`flex items-center gap-1.5 2xl:gap-2 transition-all whitespace-nowrap shrink-0 py-2 border-b-2 font-medium cursor-pointer ${
                     isActive
                       ? 'border-[#09843B] dark:border-[#0ca54a] text-[#09843B] dark:text-[#0ca54a] font-bold'
                       : 'border-transparent text-slate-600 dark:text-slate-300 hover:text-[#09843B] dark:hover:text-[#0ca54a]'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 shrink-0" />
                   <span>{item.label}</span>
                 </button>
               );
@@ -143,26 +142,17 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             )}
 
-            {/* Desktop Only Actions */}
+            {/* Desktop Action: Live RAM Report (visible on xl+ so it's never orphaned between 1280px and 1535px) */}
             {onOpenLiveReport && (
               <button
                 onClick={onOpenLiveReport}
-                className="px-3 py-2 text-xs font-bold text-[#09843B] dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/90 dark:border-emerald-800 rounded-xl transition-colors whitespace-nowrap hidden 2xl:inline-flex items-center gap-1.5 shadow-2xs cursor-pointer shrink-0"
+                className="px-2.5 2xl:px-3 py-2 text-xs font-bold text-[#09843B] dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/90 dark:border-emerald-800 rounded-xl transition-colors whitespace-nowrap hidden xl:inline-flex items-center gap-1.5 shadow-2xs cursor-pointer shrink-0"
                 title="Generar informe de auditoría de la simulación cargada en memoria RAM"
               >
                 <Database className="w-3.5 h-3.5 text-[#09843B] dark:text-emerald-400" />
                 <span>Informe en RAM</span>
               </button>
             )}
-
-            <button
-              onClick={onOpenReport}
-              className="px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-colors whitespace-nowrap hidden 2xl:inline-flex items-center gap-1.5 shadow-2xs cursor-pointer shrink-0"
-              title="Ver sustentación técnica, conceptos de SO y simplificaciones"
-            >
-              <FileText className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-              <span>Sustentación</span>
-            </button>
 
             {/* Primary Action Button (Compact on small screens, full on tablet+) */}
             <button
@@ -171,8 +161,8 @@ export const Header: React.FC<HeaderProps> = ({
               title="Crear y encolar nueva solicitud de E/S"
             >
               <Plus className="w-3.5 sm:w-4 h-3.5 sm:h-4 stroke-[2.5]" />
-              <span className="hidden min-[460px]:inline">Nueva Solicitud</span>
-              <span className="min-[460px]:hidden">Solicitud</span>
+              <span className="hidden min-[400px]:inline">Nueva Solicitud</span>
+              <span className="min-[400px]:hidden">E/S</span>
             </button>
 
             {/* Mobile / Tablet Menu Button (Toggles full responsive menu) */}
@@ -233,9 +223,9 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-      {/* Fully Responsive Mobile / Tablet Deployed Menu ("Desplegado") */}
+      {/* Fully Responsive Mobile / Tablet Deployed Menu */}
       {mobileMenuOpen && (
-        <div className="xl:hidden w-full max-w-full border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-md px-4 sm:px-6 py-4 shadow-xl space-y-4 animate-in fade-in slide-in-from-top-1 duration-150">
+        <div className="xl:hidden w-full max-w-full max-h-[calc(100vh-4.5rem)] overflow-y-auto border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 backdrop-blur-md px-4 sm:px-6 py-4 shadow-xl space-y-4">
           <div>
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
               Módulos del Simulador
@@ -258,7 +248,7 @@ export const Header: React.FC<HeaderProps> = ({
                     }`}
                   >
                     <div
-                      className={`p-2 rounded-lg ${
+                      className={`p-2 rounded-lg shrink-0 ${
                         isActive
                           ? 'bg-[#09843B] text-white'
                           : 'bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-400'

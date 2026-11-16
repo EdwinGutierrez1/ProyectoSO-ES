@@ -149,33 +149,42 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-5xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm">
+      <div className="relative w-full max-w-5xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
         {/* Top Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-800/90">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a] border border-[#09843B]/20">
-              <Database className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-                  Informe de la Simulación en Memoria RAM
-                </h2>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-[#09843B] dark:text-[#0ca54a] border border-emerald-200 dark:border-emerald-800/60 text-[10px] font-bold">
-                  RAM Volátil (En Vivo)
-                </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-800/90 shrink-0">
+          <div className="flex items-start sm:items-center justify-between gap-3 min-w-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 rounded-xl bg-[#09843B]/10 dark:bg-[#0ca54a]/20 text-[#09843B] dark:text-[#0ca54a] border border-[#09843B]/20 shrink-0">
+                <Database className="w-5 h-5" />
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Estado acumulado en la memoria de la sesión antes de reiniciar la página
-              </p>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
+                    Informe de la Simulación en Memoria RAM
+                  </h2>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-[#09843B] dark:text-[#0ca54a] border border-emerald-200 dark:border-emerald-800/60 text-[10px] font-bold shrink-0">
+                    RAM Volátil (En Vivo)
+                  </span>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+                  Estado acumulado en la memoria de la sesión antes de reiniciar la página
+                </p>
+              </div>
             </div>
+            <button
+              onClick={onClose}
+              className="sm:hidden p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer shrink-0"
+              aria-label="Cerrar informe"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={handleCopySummary}
-              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
               title="Copiar resumen al portapapeles"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />}
@@ -183,7 +192,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
             </button>
             <button
               onClick={handleDownloadJSON}
-              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
               title="Descargar volcado de estado JSON de memoria"
             >
               <Download className="w-3.5 h-3.5 text-[#09843B] dark:text-[#0ca54a]" />
@@ -191,7 +200,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
             </button>
             <button
               onClick={handlePrint}
-              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-slate-700 shadow-2xs transition-colors cursor-pointer"
               title="Imprimir informe en formato físico o PDF"
             >
               <Printer className="w-3.5 h-3.5 text-[#09843B] dark:text-[#0ca54a]" />
@@ -199,7 +208,8 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="hidden sm:inline-flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Cerrar informe"
             >
               <X className="w-5 h-5" />
             </button>
@@ -207,9 +217,9 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-6 sm:p-8 space-y-6 max-h-[82vh] overflow-y-auto text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+        <div className="p-4 sm:p-8 space-y-6 flex-1 overflow-y-auto text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
           {/* Institutional Banner */}
-          <div className="p-6 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-xs text-center space-y-3">
+          <div className="p-4 sm:p-6 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-xs text-center space-y-3">
             <div className="flex justify-center mb-1">
               <div className="p-2 bg-white dark:bg-transparent rounded-xl shadow-xs dark:shadow-none inline-block">
                 {/* Light mode logo */}
@@ -263,7 +273,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
               <span>Resumen Cuantitativo Cargado en Memoria RAM</span>
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Ticks de Reloj en Sesión</span>
                 <span className="text-2xl font-bold font-mono text-slate-900 dark:text-slate-100">{tickCount}</span>
@@ -367,12 +377,12 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Report Chart 1: CPU Efficiency Evolution */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
-                <div className="flex items-center justify-between text-xs">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                   <span className="font-bold text-slate-800 dark:text-slate-200">
                     Trayectoria de Eficiencia de CPU (% Cómputo Útil vs Ticks)
                   </span>
-                  <span className="font-mono text-xs font-bold text-[#09843B] dark:text-[#0ca54a]">{efficiencyPct}%</span>
+                  <span className="font-mono text-xs font-bold text-[#09843B] dark:text-[#0ca54a] shrink-0">{efficiencyPct}%</span>
                 </div>
 
                 <div className="h-44 bg-white dark:bg-slate-900 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
@@ -400,7 +410,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
                         : '';
 
                     return (
-                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
                         {[0, 25, 50, 75, 100].map((level) => {
                           const y = padY + chartH - (level / 100) * chartH;
                           return (
@@ -453,12 +463,12 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
               </div>
 
               {/* Report Chart 2: Throughput / Completed Requests Cumulative Timeline */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
-                <div className="flex items-center justify-between text-xs">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                   <span className="font-bold text-slate-800 dark:text-slate-200">
                     Progreso Acumulado de Solicitudes Atendidas en RAM
                   </span>
-                  <span className="font-mono text-xs font-bold text-[#09843B] dark:text-[#0ca54a]">
+                  <span className="font-mono text-xs font-bold text-[#09843B] dark:text-[#0ca54a] shrink-0">
                     {completedRequests.length} tareas
                   </span>
                 </div>
@@ -484,7 +494,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
                     const pathData = svgPoints.length > 0 ? `M ${svgPoints.join(' L ')}` : '';
 
                     return (
-                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
                         {[0, Math.round(maxCompleted / 2), maxCompleted].map((val, idx) => {
                           const y = padY + chartH - (val / maxCompleted) * chartH;
                           return (
@@ -531,7 +541,7 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
                 Tiempos Promedio de Espera en Cola por Periférico (Medido en RAM)
               </span>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {(['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'] as const).map((devId) => {
                   const dev = devices[devId];
                   const avgWait =
@@ -594,9 +604,9 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
 
           {/* Real Processed Requests Table */}
           <div className="space-y-2">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex flex-wrap items-center justify-between gap-2">
               <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-[#0ca54a]" />
+                <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-[#0ca54a] shrink-0" />
                 <span>Historial de Solicitudes Atendidas en la Sesión ({allRequests.length})</span>
               </span>
               <span className="text-xs text-slate-500 dark:text-slate-400 font-normal">
@@ -605,8 +615,8 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
             </h3>
 
             {allRequests.length > 0 ? (
-              <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden max-h-56 overflow-y-auto">
-                <table className="w-full text-left text-xs">
+              <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-x-auto max-h-56 overflow-y-auto">
+                <table className="w-full min-w-[640px] text-left text-xs">
                   <thead className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold sticky top-0">
                     <tr>
                       <th className="py-2 px-3">ID</th>
@@ -702,11 +712,11 @@ RESUMEN DE SESIÓN EN MEMORIA VOLÁTIL:
         </div>
 
         {/* Modal Bottom Bar */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-3 shrink-0">
+          <div className="text-xs text-slate-500 dark:text-slate-400 font-medium text-center sm:text-left">
             Universidad Simón Bolívar · Ingeniería de Sistemas · Docente: <strong className="text-slate-800 dark:text-slate-200">MSc. Alvaro Salamanca</strong>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 shrink-0">
             <button
               onClick={handlePrint}
               className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5"

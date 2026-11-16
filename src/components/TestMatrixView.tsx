@@ -50,12 +50,12 @@ export const TestMatrixView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <HelpCircle className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a]" />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+              <HelpCircle className="w-5 h-5 text-[#09843B] dark:text-[#0ca54a] shrink-0" />
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                 Matriz de Pruebas Controladas (Rúbrica de Evaluación)
               </h2>
             </div>
@@ -67,7 +67,7 @@ export const TestMatrixView: React.FC = () => {
 
           <button
             onClick={handleRunAll}
-            className="px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer"
+            className="w-full sm:w-auto justify-center px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#0ca54a] dark:hover:bg-[#09843B] text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all shrink-0 cursor-pointer"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>Ejecutar Todas las Pruebas</span>
@@ -84,12 +84,12 @@ export const TestMatrixView: React.FC = () => {
           return (
             <div
               key={sc.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 transition-all shadow-xs"
+              className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 transition-all shadow-xs"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5 min-w-0">
                   <span
-                    className={`text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-lg uppercase tracking-wider ${
+                    className={`text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-lg uppercase tracking-wider shrink-0 ${
                       sc.category === 'NORMAL'
                         ? 'bg-emerald-50 dark:bg-emerald-950/40 text-[#09843B] dark:text-[#0ca54a] border border-emerald-200 dark:border-emerald-800/60'
                         : sc.category === 'LIMITE'
@@ -101,10 +101,10 @@ export const TestMatrixView: React.FC = () => {
                   >
                     Escenario {sc.category}
                   </span>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">{sc.name}</h3>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">{sc.name}</h3>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2.5 shrink-0">
                   {res && (
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                       Ejecutado: {res.executedAt}

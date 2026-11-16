@@ -41,12 +41,12 @@ export const ComparisonBench: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner & Scenario Selector */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xs transition-colors">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <GitCompare className="w-5 h-5 text-[#09843B] dark:text-emerald-400" />
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+              <GitCompare className="w-5 h-5 text-[#09843B] dark:text-emerald-400 shrink-0" />
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                 Banco de Comparación Directa: Sondeo vs Interrupciones
               </h2>
             </div>
@@ -55,11 +55,11 @@ export const ComparisonBench: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={handleRunBenchmark}
               disabled={isRunning}
-              className="px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#09843B] dark:hover:bg-[#0ca54a] disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+              className="w-full sm:w-auto justify-center px-4 py-2 rounded-xl bg-[#09843B] hover:bg-[#076b30] dark:bg-[#09843B] dark:hover:bg-[#0ca54a] disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{isRunning ? 'Ejecutando Benchmark...' : 'Ejecutar Comparativa'}</span>
@@ -114,12 +114,12 @@ export const ComparisonBench: React.FC = () => {
 
       {/* Behavioral Charts Section (Gráficas de Comportamiento) */}
       {pol && irq && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-6 shadow-xs transition-colors">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-6 shadow-xs transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <Gauge className="w-5 h-5 text-[#09843B] dark:text-emerald-400" />
-                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+                <Gauge className="w-5 h-5 text-[#09843B] dark:text-emerald-400 shrink-0" />
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                   Gráficas de Comportamiento Dinámico: Sondeo vs Interrupciones
                 </h3>
               </div>
@@ -129,7 +129,7 @@ export const ComparisonBench: React.FC = () => {
             </div>
 
             {/* Chart Legend */}
-            <div className="flex items-center gap-4 text-xs font-semibold">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-semibold shrink-0">
               <div className="flex items-center gap-1.5">
                 <span className="w-3.5 h-1.5 rounded-full bg-[#09843B] dark:bg-emerald-400" />
                 <span className="text-[#09843B] dark:text-emerald-400">Interrupciones (IRQ)</span>
@@ -141,18 +141,18 @@ export const ComparisonBench: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             {/* Chart 1: CPU Efficiency Evolution Over Time (SVG Line Chart) */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
-              <div className="flex items-center justify-between text-xs">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                 <span className="font-bold text-slate-800 dark:text-slate-200">
                   Curva de Eficiencia de CPU (% Cómputo Útil vs Ticks)
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">0 - {ticksCount} Ticks</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono shrink-0">0 - {ticksCount} Ticks</span>
               </div>
 
               {/* Responsive SVG Line Chart */}
-              <div className="relative w-full h-56 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
+              <div className="relative w-full h-48 sm:h-56 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
                 {(() => {
                   const width = 460;
                   const height = 180;
@@ -182,7 +182,7 @@ export const ComparisonBench: React.FC = () => {
                   const irqPath = irqPoints.length > 0 ? `M ${irqPoints.join(' L ')}` : '';
 
                   return (
-                    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
                       {/* Horizontal Gridlines */}
                       {[0, 25, 50, 75, 100].map((level) => {
                         const y = padY + chartH - (level / 100) * chartH;
@@ -253,31 +253,31 @@ export const ComparisonBench: React.FC = () => {
                 })()}
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-emerald-400" />
+                  <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-emerald-400 shrink-0" />
                   <span>Interrupciones: media del <strong className="text-slate-800 dark:text-slate-100">{irq.cpuEfficiencyPct}%</strong></span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
                   <span>Sondeo: caída a <strong className="text-slate-800 dark:text-slate-100">{pol.cpuEfficiencyPct}%</strong></span>
                 </span>
               </div>
             </div>
 
             {/* Chart 2: Throughput / Completed Requests Cumulative Timeline */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
-              <div className="flex items-center justify-between text-xs">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
                 <span className="font-bold text-slate-800 dark:text-slate-200">
                   Progreso de Solicitudes Completadas (Throughput Temporal)
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono shrink-0">
                   Total Carga: {currentScenario.requestsToInject.length}
                 </span>
               </div>
 
               {/* Responsive SVG Throughput Chart */}
-              <div className="relative w-full h-56 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
+              <div className="relative w-full h-48 sm:h-56 bg-white dark:bg-slate-950 rounded-lg border border-slate-200/80 dark:border-slate-800 p-2">
                 {(() => {
                   const width = 460;
                   const height = 180;
@@ -308,7 +308,7 @@ export const ComparisonBench: React.FC = () => {
                   const irqPath = irqPoints.length > 0 ? `M ${irqPoints.join(' L ')}` : '';
 
                   return (
-                    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-hidden">
                       {/* Gridlines */}
                       {[0, Math.round(maxReqs / 2), maxReqs].map((level, idx) => {
                         const y = padY + chartH - (level / maxReqs) * chartH;
@@ -369,17 +369,17 @@ export const ComparisonBench: React.FC = () => {
                 })()}
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
                 <span>Interrupciones finaliza con anticipación aprovechando asincronía</span>
-                <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold">
+                <span className="font-mono text-slate-700 dark:text-slate-300 font-semibold shrink-0">
                   IRQ: {irq.totalRequestsCompleted} vs Polling: {pol.totalRequestsCompleted}
                 </span>
               </div>
             </div>
 
             {/* Chart 3: Device Latency & Waiting Time Breakdown (Bar Chart) */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3 lg:col-span-2">
-              <div className="flex items-center justify-between text-xs pb-1 border-b border-slate-200/60 dark:border-slate-700">
+            <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3 lg:col-span-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs pb-1 border-b border-slate-200/60 dark:border-slate-700">
                 <span className="font-bold text-slate-800 dark:text-slate-200">
                   Comparativa de Tiempo de Espera en Cola por Periférico (Ticks de Retraso)
                 </span>
@@ -388,7 +388,7 @@ export const ComparisonBench: React.FC = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
+              <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
                 {(['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'] as const).map((devId) => {
                   const devName =
                     devId === 'KEYBOARD'
@@ -457,7 +457,7 @@ export const ComparisonBench: React.FC = () => {
 
       {/* Analytical Conclusion Box */}
       {pol && irq && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-3 shadow-xs transition-colors">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 sm:p-6 space-y-3 shadow-xs transition-colors">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#09843B] dark:text-emerald-400" />
             <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">

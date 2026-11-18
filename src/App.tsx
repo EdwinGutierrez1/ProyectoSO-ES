@@ -329,29 +329,43 @@ export default function App() {
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 shadow-xs mt-12 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Column 1: Institutional Branding */}
-            <div className="space-y-3">
-              <div className="p-1 sm:p-1.5 rounded-xl bg-white dark:bg-transparent inline-block shadow-2xs dark:shadow-none border border-slate-200/60 dark:border-transparent transition-all">
-                {/* Light mode logo */}
+            {/* Column 1: Institutional & Career Branding */}
+            <div className="space-y-3.5">
+              <div className="flex flex-wrap items-center gap-3.5">
+                {/* Universidad Simón Bolívar Logo (embedded directly) */}
                 <img
                   src="/assets/aistudio/image_dddfa0f9.png"
                   alt="Universidad Simón Bolívar"
-                  className="h-9 w-auto object-contain dark:hidden"
+                  className="h-11 sm:h-12 w-auto object-contain select-none dark:hidden"
                 />
-                {/* Dark mode logo */}
                 <img
                   src="/assets/aistudio/Captura_de_pantalla_2026-11-12_085043-removebg-preview_0b4e7ef0.png"
                   alt="Universidad Simón Bolívar"
-                  className="h-9 w-auto object-contain hidden dark:block"
+                  className="h-11 sm:h-12 w-auto object-contain select-none hidden dark:block"
+                />
+
+                <div className="h-10 w-px bg-slate-200 dark:bg-slate-700 shrink-0" />
+
+                {/* Ingeniería de Sistemas Career Logo (adaptive light/dark) */}
+                <img
+                  src="/assets/aistudio/logosist-removebg-preview_c932a8d5.png"
+                  alt="Ingeniería de Sistemas"
+                  className="h-12 w-12 sm:h-13 sm:w-13 object-contain select-none dark:hidden"
+                />
+                <img
+                  src="/assets/aistudio/logo-sistemas_c9e1268f.png"
+                  alt="Ingeniería de Sistemas"
+                  className="h-12 w-12 sm:h-13 sm:w-13 object-contain select-none hidden dark:block"
                 />
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                Institución de Educación Superior comprometida con la excelencia académica, la formación integral y el rigor científico en ingeniería.
-              </p>
-              <div className="pt-1">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-[#09843B]/10 dark:bg-[#09843B]/20 text-[#09843B] dark:text-emerald-400 text-[11px] font-bold border border-[#09843B]/20 dark:border-[#09843B]/30">
-                  Carrera: Ingeniería de Sistemas
-                </span>
+
+              <div className="space-y-1.5">
+                <div className="text-xs font-bold text-[#09843B] dark:text-emerald-400">
+                  Programa de Ingeniería de Sistemas
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                  Institución de Educación Superior comprometida con la excelencia académica, la formación integral y el rigor científico en ingeniería.
+                </p>
               </div>
             </div>
 

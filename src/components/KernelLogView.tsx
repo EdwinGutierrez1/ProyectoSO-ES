@@ -7,15 +7,18 @@
 
 import React, { useState } from 'react';
 import { KernelLogEntry, LogSeverity } from '../types/io-simulator';
-import { Terminal, Filter, Zap, RefreshCw, AlertTriangle, CheckCircle2, Trash2 } from 'lucide-react';
+import { Terminal, Zap, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface KernelLogViewProps {
   logs: KernelLogEntry[];
   onClearLogs?: () => void;
 }
 
-export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs }) => {
+export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs }) => {
   const [filterSeverity, setFilterSeverity] = useState<string>('ALL');
+  const { lang } = useLanguage();
+  const isEs = lang === 'es';
 
   const filteredLogs = logs.filter((log) => {
     if (filterSeverity === 'ALL') return true;
@@ -38,7 +41,7 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
         return (
           <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 font-bold flex items-center gap-1">
             <RefreshCw className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400" />
-            SONDEO
+            {isEs ? 'SONDEO' : 'POLLING'}
           </span>
         );
       case 'ERROR':
@@ -77,10 +80,10 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
         <div className="flex flex-wrap items-center gap-2 min-w-0">
           <Terminal className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
           <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-            Registro de Eventos del Kernel (Kernel I/O Log)
+            {isEs ? 'Registro de Eventos del Kernel (Kernel I/O Log)' : 'Kernel Event Log (Kernel I/O Log)'}
           </h3>
           <span className="text-xs text-slate-500 dark:text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-medium border border-slate-200 dark:border-slate-700 shrink-0">
-            {logs.length} eventos
+            {logs.length} {isEs ? 'eventos' : 'events'}
           </span>
         </div>
 
@@ -94,7 +97,7 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-700'
             }`}
           >
-            Todos
+            {isEs ? 'Todos' : 'All'}
           </button>
           <button
             onClick={() => setFilterSeverity('IRQ')}
@@ -104,7 +107,7 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-purple-700 dark:hover:text-purple-300 border border-slate-200 dark:border-slate-700'
             }`}
           >
-            Interrupciones
+            {isEs ? 'Interrupciones' : 'Interrupts'}
           </button>
           <button
             onClick={() => setFilterSeverity('POLLING')}
@@ -114,7 +117,7 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-700 dark:hover:text-amber-300 border border-slate-200 dark:border-slate-700'
             }`}
           >
-            Sondeo
+            {isEs ? 'Sondeo' : 'Polling'}
           </button>
           <button
             onClick={() => setFilterSeverity('ERROR')}
@@ -124,7 +127,7 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
                 : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-rose-700 dark:hover:text-rose-300 border border-slate-200 dark:border-slate-700'
             }`}
           >
-            Fallos
+            {isEs ? 'Fallos' : 'Faults'}
           </button>
         </div>
       </div>
@@ -155,7 +158,9 @@ export const KernelLogView: React.FC<KernelLogViewProps> = ({ logs, onClearLogs 
           ))
         ) : (
           <div className="py-6 text-center text-slate-400 dark:text-slate-500 text-xs italic">
-            No hay eventos registrados con el filtro seleccionado.
+            {isEs
+              ? 'No hay eventos registrados con el filtro seleccionado.'
+              : 'No events recorded matching the selected filter.'}
           </div>
         )}
       </div>

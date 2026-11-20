@@ -8,6 +8,7 @@
 import React from 'react';
 import { IOMode } from '../types/io-simulator';
 import { Play, Pause, SkipForward, RotateCcw, Zap, RefreshCw, Sparkles } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SimulationControlsProps {
   isRunning: boolean;
@@ -36,6 +37,9 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
   onToggleAutoGenerate,
   tickCount,
 }) => {
+  const { lang } = useLanguage();
+  const isEs = lang === 'es';
+
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 flex flex-col xl:flex-row xl:items-center justify-between gap-3 sm:gap-4 shadow-xs transition-colors">
       {/* Primary Action Buttons: Play/Pause, Step, Reset */}
@@ -51,12 +55,12 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           {isRunning ? (
             <>
               <Pause className="w-4 h-4 fill-current shrink-0" />
-              <span>Pausar Simulación</span>
+              <span>{isEs ? 'Pausar Simulación' : 'Pause Simulation'}</span>
             </>
           ) : (
             <>
               <Play className="w-4 h-4 fill-current shrink-0" />
-              <span>Iniciar Simulación</span>
+              <span>{isEs ? 'Iniciar Simulación' : 'Start Simulation'}</span>
             </>
           )}
         </button>
@@ -65,19 +69,19 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           onClick={onStep}
           disabled={isRunning}
           className="px-3 sm:px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 text-slate-700 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-colors shadow-xs cursor-pointer shrink-0"
-          title="Avanzar exactamente 1 tick de reloj de CPU"
+          title={isEs ? 'Avanzar exactamente 1 tick de reloj de CPU' : 'Advance exactly 1 CPU clock tick'}
         >
           <SkipForward className="w-4 h-4 text-[#09843B] dark:text-emerald-400" />
-          <span className="hidden sm:inline">Paso a Paso</span>
+          <span className="hidden sm:inline">{isEs ? 'Paso a Paso' : 'Step'}</span>
         </button>
 
         <button
           onClick={onReset}
           className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-semibold flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 transition-colors shadow-xs cursor-pointer shrink-0"
-          title="Reiniciar ticks y estado de dispositivos"
+          title={isEs ? 'Reiniciar ticks y estado de dispositivos' : 'Reset ticks and device states'}
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Reiniciar</span>
+          <span className="hidden sm:inline">{isEs ? 'Reiniciar' : 'Reset'}</span>
         </button>
 
         <div className="font-mono text-xs px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 shadow-xs shrink-0">
@@ -97,7 +101,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           }`}
         >
           <Zap className={`w-3.5 h-3.5 shrink-0 ${mode === 'INTERRUPTS' ? 'text-white' : 'text-[#09843B] dark:text-emerald-400'}`} />
-          <span>Interrupciones (IRQ)</span>
+          <span>{isEs ? 'Interrupciones (IRQ)' : 'Interrupts (IRQ)'}</span>
         </button>
 
         <button
@@ -109,7 +113,7 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
           }`}
         >
           <RefreshCw className={`w-3.5 h-3.5 shrink-0 ${mode === 'POLLING' ? 'text-white' : 'text-amber-600 dark:text-amber-400'}`} />
-          <span>Sondeo (Polling)</span>
+          <span>{isEs ? 'Sondeo (Polling)' : 'Polling (Busy-Wait)'}</span>
         </button>
       </div>
 
@@ -123,23 +127,33 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({
               ? 'bg-emerald-50 dark:bg-emerald-950/60 text-[#09843B] dark:text-emerald-400 border-emerald-300 dark:border-emerald-700 font-bold'
               : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
           }`}
-          title="Genera solicitudes de entrada/salida de forma automática y continua"
+          title={
+            isEs
+              ? 'Genera solicitudes de entrada/salida de forma automática y continua'
+              : 'Automatically and continuously generates I/O requests'
+          }
         >
           <Sparkles className="w-3.5 h-3.5 text-[#09843B] dark:text-emerald-400 shrink-0" />
-          <span>Carga Auto: {autoGenerate ? 'ACTIVA' : 'OFF'}</span>
+          <span>
+            {isEs
+              ? `Carga Auto: ${autoGenerate ? 'ACTIVA' : 'OFF'}`
+              : `Auto Load: ${autoGenerate ? 'ON' : 'OFF'}`}
+          </span>
         </button>
 
         {/* Speed Selector */}
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">Velocidad:</span>
+          <span className="text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">
+            {isEs ? 'Velocidad:' : 'Speed:'}
+          </span>
           <select
             value={speedMs}
             onChange={(e) => onChangeSpeed(parseInt(e.target.value, 10))}
             className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-medium rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-[#09843B] dark:focus:border-emerald-400 shadow-xs"
           >
-            <option value={1500}>0.5x (Lenta)</option>
+            <option value={1500}>{isEs ? '0.5x (Lenta)' : '0.5x (Slow)'}</option>
             <option value={800}>1.0x (Normal)</option>
-            <option value={400}>2.0x (Rápida)</option>
+            <option value={400}>{isEs ? '2.0x (Rápida)' : '2.0x (Fast)'}</option>
             <option value={150}>5.0x (Ultra)</option>
           </select>
         </div>

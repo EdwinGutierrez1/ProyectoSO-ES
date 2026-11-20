@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { SimulatorEngine, INITIAL_DEVICES, INITIAL_CPU_STATE } from './services/simulatorEngine';
+import { SimulatorEngine } from './services/simulatorEngine';
 import { IOMode, DeviceType, FaultType, IORequest } from './types/io-simulator';
 import { Header } from './components/Header';
 import { SimulationControls } from './components/SimulationControls';
@@ -21,15 +21,22 @@ import { NewRequestModal } from './components/NewRequestModal';
 import { KernelLogView } from './components/KernelLogView';
 import { LiveSessionReportModal } from './components/LiveSessionReportModal';
 import { RealTimeCharts } from './components/RealTimeCharts';
+import { useLanguage } from './i18n/LanguageContext';
 
 export default function App() {
+  const { lang } = useLanguage();
+  const isEs = lang === 'es';
+
   // Navigation Tab State
   const [currentTab, setCurrentTab] = useState<
     'simulator' | 'comparison' | 'experiments' | 'testmatrix' | 'report'
   >('simulator');
 
   // Simulator Instance Reference
-  const engineRef = useRef<SimulatorEngine>(new SimulatorEngine('INTERRUPTS'));
+  const engineRef = useRef<SimulatorEngine | null>(null);
+  if (!engineRef.current) {
+    engineRef.current = new SimulatorEngine('INTERRUPTS', lang);
+  }
 
   // Reactive State Synced from Engine
   const [mode, setMode] = useState<IOMode>('INTERRUPTS');
@@ -78,6 +85,7 @@ export default function App() {
   // Sync state helper
   const syncStateFromEngine = useCallback(() => {
     const engine = engineRef.current;
+    if (!engine) return;
     setTickCount(engine.tickCount);
     setDevices({ ...engine.devices });
     setCpu({ ...engine.cpu });
@@ -87,20 +95,35 @@ export default function App() {
     setHistory([...engine.history]);
   }, []);
 
+  // Sync simulator engine language when UI language changes
+  useEffect(() => {
+    if (engineRef.current) {
+      engineRef.current.setLanguage(lang);
+      syncStateFromEngine();
+    }
+  }, [lang, syncStateFromEngine]);
+
   // Step function
   const handleStep = useCallback(() => {
-    const engine = engineRef.current;
+    const engine = engineRef.current!;
 
     // If auto-generator is enabled, occasionally inject random request
     if (autoGenerate && Math.random() < 0.35) {
       const devTypes: DeviceType[] = ['KEYBOARD', 'DISK', 'PRINTER', 'NETWORK'];
       const chosenDev = devTypes[Math.floor(Math.random() * devTypes.length)];
-      const samplePayloads: Record<DeviceType, string> = {
-        KEYBOARD: 'Entrada interactiva de usuario',
-        DISK: 'Lectura /etc/hosts (4KB)',
-        PRINTER: 'Página de documento PDF',
-        NETWORK: 'GET /api/v1/status HTTP/1.1',
-      };
+      const samplePayloads: Record<DeviceType, string> = isEs
+        ? {
+            KEYBOARD: 'Entrada interactiva de usuario',
+            DISK: 'Lectura /etc/hosts (4KB)',
+            PRINTER: 'Página de documento PDF',
+            NETWORK: 'GET /api/v1/status HTTP/1.1',
+          }
+        : {
+            KEYBOARD: 'Interactive user input',
+            DISK: 'Read /etc/hosts (4KB)',
+            PRINTER: 'PDF document page',
+            NETWORK: 'GET /api/v1/status HTTP/1.1',
+          };
       const sampleBytes: Record<DeviceType, number> = {
         KEYBOARD: 4,
         DISK: 4096,
@@ -114,13 +137,13 @@ export default function App() {
         payload: samplePayloads[chosenDev],
         bytes: sampleBytes[chosenDev],
         priority: Math.random() > 0.7 ? 'HIGH' : 'NORMAL',
-        processName: `Proceso-Worker-${Math.floor(Math.random() * 90 + 10)}`,
+        processName: `${isEs ? 'Proceso-Worker' : 'Worker-Process'}-${Math.floor(Math.random() * 90 + 10)}`,
       });
     }
 
     engine.step();
     syncStateFromEngine();
-  }, [autoGenerate, syncStateFromEngine]);
+  }, [autoGenerate, isEs, syncStateFromEngine]);
 
   // Clock Timer Effect
   useEffect(() => {
@@ -136,55 +159,55 @@ export default function App() {
   // Mode Change
   const handleChangeMode = (newMode: IOMode) => {
     setMode(newMode);
-    engineRef.current.setMode(newMode);
+    engineRef.current?.setMode(newMode);
     syncStateFromEngine();
   };
 
   // Reset
   const handleReset = () => {
     setIsRunning(false);
-    engineRef.current.reset(mode);
+    engineRef.current?.reset(mode);
     syncStateFromEngine();
   };
 
   // Quick Event Injection
   const handleInjectQuickEvent = (deviceId: DeviceType) => {
-    const engine = engineRef.current;
+    const engine = engineRef.current!;
     if (deviceId === 'KEYBOARD') {
       engine.addRequest({
         deviceType: 'KEYBOARD',
         operation: 'READ',
-        payload: 'Pulsación de tecla [Espacio]',
+        payload: isEs ? 'Pulsación de tecla [Espacio]' : 'Keystroke [Space]',
         bytes: 1,
         priority: 'HIGH',
-        processName: 'Editor de Texto',
+        processName: isEs ? 'Editor de Texto' : 'Text Editor',
       });
     } else if (deviceId === 'DISK') {
       engine.addRequest({
         deviceType: 'DISK',
         operation: 'READ',
-        payload: 'Sector LBA 0x0F4B (data.bin)',
+        payload: isEs ? 'Sector LBA 0x0F4B (data.bin)' : 'LBA Sector 0x0F4B (data.bin)',
         bytes: 4096,
         priority: 'NORMAL',
-        processName: 'Gestor de BD',
+        processName: isEs ? 'Gestor de BD' : 'DB Manager',
       });
     } else if (deviceId === 'PRINTER') {
       engine.addRequest({
         deviceType: 'PRINTER',
         operation: 'WRITE',
-        payload: 'Documento informe_final.ps',
+        payload: isEs ? 'Documento informe_final.ps' : 'Document final_report.ps',
         bytes: 12288,
         priority: 'LOW',
-        processName: 'Daemon de Impresión',
+        processName: isEs ? 'Daemon de Impresión' : 'Print Daemon',
       });
     } else if (deviceId === 'NETWORK') {
       engine.addRequest({
         deviceType: 'NETWORK',
         operation: 'READ',
-        payload: 'Paquete entrante UDP (Streaming)',
+        payload: isEs ? 'Paquete entrante UDP (Streaming)' : 'Incoming UDP Packet (Streaming)',
         bytes: 1420,
         priority: 'HIGH',
-        processName: 'Socket de Red',
+        processName: isEs ? 'Socket de Red' : 'Network Socket',
       });
     }
     syncStateFromEngine();
@@ -192,13 +215,13 @@ export default function App() {
 
   // Fault toggle
   const handleToggleFault = (deviceId: DeviceType, fault: FaultType) => {
-    engineRef.current.setFault(deviceId, fault);
+    engineRef.current?.setFault(deviceId, fault);
     syncStateFromEngine();
   };
 
   // Latency Change
   const handleChangeLatency = (deviceId: DeviceType, latency: number) => {
-    engineRef.current.setDeviceLatency(deviceId, latency);
+    engineRef.current?.setDeviceLatency(deviceId, latency);
     syncStateFromEngine();
   };
 
@@ -212,7 +235,7 @@ export default function App() {
     processName: string;
     willFail?: FaultType;
   }) => {
-    engineRef.current.addRequest(params);
+    engineRef.current?.addRequest(params);
     syncStateFromEngine();
   };
 
@@ -268,10 +291,16 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-3">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#09843B] dark:bg-[#0ca54a] shrink-0" />
-                  <span>Dispositivos de Entrada/Salida Simulados (Página 12)</span>
+                  <span>
+                    {isEs
+                      ? 'Dispositivos de Entrada/Salida Simulados (Página 12)'
+                      : 'Simulated Input/Output Devices (Page 12)'}
+                  </span>
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  Teclado (IRQ 1) · Disco (IRQ 14) · Impresora (IRQ 7) · Red (IRQ 11)
+                  {isEs
+                    ? 'Teclado (IRQ 1) · Disco (IRQ 14) · Impresora (IRQ 7) · Red (IRQ 11)'
+                    : 'Keyboard (IRQ 1) · Disk (IRQ 14) · Printer (IRQ 7) · Network (IRQ 11)'}
                 </span>
               </div>
 
@@ -361,10 +390,12 @@ export default function App() {
 
               <div className="space-y-1.5">
                 <div className="text-xs font-bold text-[#09843B] dark:text-emerald-400">
-                  Programa de Ingeniería de Sistemas
+                  {isEs ? 'Programa de Ingeniería de Sistemas' : 'Systems Engineering Program'}
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                  Institución de Educación Superior comprometida con la excelencia académica, la formación integral y el rigor científico en ingeniería.
+                  {isEs
+                    ? 'Institución de Educación Superior comprometida con la excelencia académica, la formación integral y el rigor científico en ingeniería.'
+                    : 'Higher Education Institution committed to academic excellence, comprehensive education, and scientific rigor in engineering.'}
                 </p>
               </div>
             </div>
@@ -372,20 +403,29 @@ export default function App() {
             {/* Column 2: Academic Unit & Faculty */}
             <div className="space-y-2.5 text-xs">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                Cátedra y Docencia
+                {isEs ? 'Cátedra y Docencia' : 'Course & Faculty'}
               </h4>
               <ul className="space-y-2 text-slate-600 dark:text-slate-300">
                 <li>
-                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">Asignatura:</span>
-                  <strong className="text-slate-900 dark:text-slate-100">Sistemas Operativos</strong> (V Semestre)
+                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">
+                    {isEs ? 'Asignatura:' : 'Course:'}
+                  </span>
+                  <strong className="text-slate-900 dark:text-slate-100">
+                    {isEs ? 'Sistemas Operativos' : 'Operating Systems'}
+                  </strong>{' '}
+                  {isEs ? '(V Semestre)' : '(5th Semester)'}
                 </li>
                 <li>
-                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">Docente Titular:</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">
+                    {isEs ? 'Docente Titular:' : 'Course Instructor:'}
+                  </span>
                   <strong className="text-[#09843B] dark:text-emerald-400 font-bold">MSc. Alvaro Salamanca</strong>
                 </li>
                 <li>
-                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">Facultad:</span>
-                  <span>Facultad de Ingenierías</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">
+                    {isEs ? 'Facultad:' : 'Faculty:'}
+                  </span>
+                  <span>{isEs ? 'Facultad de Ingenierías' : 'Faculty of Engineering'}</span>
                 </li>
               </ul>
             </div>
@@ -393,11 +433,13 @@ export default function App() {
             {/* Column 3: Authors & Project Metadata */}
             <div className="space-y-2.5 text-xs">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                Equipo de Desarrollo
+                {isEs ? 'Equipo de Desarrollo' : 'Development Team'}
               </h4>
               <ul className="space-y-2 text-slate-600 dark:text-slate-300">
                 <li>
-                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">Estudiantes Asignados:</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">
+                    {isEs ? 'Estudiantes Asignados:' : 'Assigned Students:'}
+                  </span>
                   <div className="font-semibold text-slate-900 dark:text-slate-100 space-y-0.5 mt-0.5">
                     <p className="flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#09843B] dark:bg-emerald-400" />
@@ -410,8 +452,12 @@ export default function App() {
                   </div>
                 </li>
                 <li>
-                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">Propuesta:</span>
-                  <span>Proyecto Final #10 · I/O Simulator</span>
+                  <span className="text-slate-400 dark:text-slate-500 block text-[11px]">
+                    {isEs ? 'Propuesta:' : 'Proposal:'}
+                  </span>
+                  <span>
+                    {isEs ? 'Proyecto Final #10 · I/O Simulator' : 'Final Project #10 · I/O Simulator'}
+                  </span>
                 </li>
               </ul>
             </div>
@@ -419,36 +465,38 @@ export default function App() {
             {/* Column 4: Quick Navigation & Defense */}
             <div className="space-y-2.5 text-xs">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                Acciones de Sustentación
+                {isEs ? 'Acciones de Sustentación' : 'Defense & Audit Actions'}
               </h4>
               <div className="space-y-2">
                 <button
                   onClick={() => setIsLiveReportOpen(true)}
                   className="w-full text-left px-3 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-[#09843B] dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800 transition-colors flex items-center justify-between shadow-2xs cursor-pointer"
                 >
-                  <span>Informe en Memoria RAM</span>
-                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 bg-white dark:bg-emerald-900/80 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-700">En Vivo</span>
+                  <span>{isEs ? 'Informe en Memoria RAM' : 'RAM Memory Report'}</span>
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-300 bg-white dark:bg-emerald-900/80 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-700">
+                    {isEs ? 'En Vivo' : 'Live'}
+                  </span>
                 </button>
                 <button
                   onClick={() => setIsReportOpen(true)}
                   className="w-full text-left px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-[#09843B]/10 dark:hover:bg-slate-700 hover:text-[#09843B] text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <span>Sustentación Teórica</span>
+                  <span>{isEs ? 'Sustentación Teórica' : 'Theoretical Defense'}</span>
                   <span className="text-[10px] text-slate-400">PDF</span>
                 </button>
                 <button
                   onClick={() => setCurrentTab('testmatrix')}
                   className="w-full text-left px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-[#09843B]/10 dark:hover:bg-slate-700 hover:text-[#09843B] text-slate-700 dark:text-slate-200 text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <span>Matriz de Pruebas Controladas</span>
-                  <span className="text-[10px] text-slate-400">4 Casos</span>
+                  <span>{isEs ? 'Matriz de Pruebas Controladas' : 'Controlled Test Matrix'}</span>
+                  <span className="text-[10px] text-slate-400">{isEs ? '4 Casos' : '4 Cases'}</span>
                 </button>
                 <button
                   onClick={() => setIsNewRequestOpen(true)}
                   className="w-full text-left px-3 py-2 rounded-lg bg-[#09843B] hover:bg-[#076b30] dark:bg-[#09843B] dark:hover:bg-[#0ca54a] text-white text-xs font-bold transition-colors flex items-center justify-between shadow-2xs cursor-pointer"
                 >
-                  <span>Generar Solicitud E/S</span>
-                  <span className="text-[10px] text-emerald-100">+ Inyectar</span>
+                  <span>{isEs ? 'Generar Solicitud E/S' : 'Generate I/O Request'}</span>
+                  <span className="text-[10px] text-emerald-100">{isEs ? '+ Inyectar' : '+ Inject'}</span>
                 </button>
               </div>
             </div>
@@ -457,10 +505,13 @@ export default function App() {
           {/* Bottom Copyright & Accreditation Line */}
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 text-xs text-slate-500 dark:text-slate-400 text-center sm:text-left">
             <p>
-              © 2026 Universidad Simón Bolívar · Ingeniería de Sistemas · Sistemas Operativos V Semestre
+              {isEs
+                ? '© 2026 Universidad Simón Bolívar · Ingeniería de Sistemas · Sistemas Operativos V Semestre'
+                : '© 2026 Universidad Simón Bolívar · Systems Engineering · Operating Systems 5th Semester'}
             </p>
             <p className="text-slate-400 dark:text-slate-500">
-              Evaluación Final con Rúbrica de Excelencia · Docente: <span className="text-slate-600 dark:text-slate-300 font-medium">MSc. Alvaro Salamanca</span>
+              {isEs ? 'Evaluación Final con Rúbrica de Excelencia · Docente: ' : 'Final Evaluation with Excellence Rubric · Instructor: '}
+              <span className="text-slate-600 dark:text-slate-300 font-medium">MSc. Alvaro Salamanca</span>
             </p>
           </div>
         </div>

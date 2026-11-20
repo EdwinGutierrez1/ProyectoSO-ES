@@ -16,6 +16,7 @@ import {
   TestScenario,
   ComparisonMetrics,
 } from '../types/io-simulator';
+import { Language, DEVICE_LABELS, getFaultMessage } from '../i18n/translations';
 
 export const INITIAL_DEVICES: Record<DeviceType, IODevice> = {
   KEYBOARD: {
@@ -150,6 +151,7 @@ export const INITIAL_CPU_STATE: CPUState = {
 };
 
 export class SimulatorEngine {
+  public lang: Language = 'es';
   public mode: IOMode = 'INTERRUPTS';
   public tickCount: number = 0;
   public devices: Record<DeviceType, IODevice>;
@@ -170,16 +172,45 @@ export class SimulatorEngine {
     completedRequests: number;
   }> = [];
 
-  constructor(initialMode: IOMode = 'INTERRUPTS') {
+  constructor(initialMode: IOMode = 'INTERRUPTS', initialLang: Language = 'es') {
+    this.lang = initialLang;
     this.mode = initialMode;
     this.devices = JSON.parse(JSON.stringify(INITIAL_DEVICES));
     this.cpu = JSON.parse(JSON.stringify(INITIAL_CPU_STATE));
+    this.applyLanguageToState(initialLang);
+    const isEn = initialLang === 'en';
     this.addLog(
       'INFO',
       'KERNEL',
-      'Subsistema de E/S Inicializado',
-      `Simulador listo en modo ${initialMode === 'INTERRUPTS' ? 'INTERRUPCIONES (IRQ + ISR)' : 'SONDEO (Busy-Waiting Polling)'}. Dispositivos: Teclado (IRQ 1), Disco (IRQ 14), Impresora (IRQ 7), Red (IRQ 11).`
+      isEn ? 'I/O Subsystem Initialized' : 'Subsistema de E/S Inicializado',
+      isEn
+        ? `Simulator ready in ${initialMode === 'INTERRUPTS' ? 'INTERRUPTS (IRQ + ISR)' : 'POLLING (Busy-Waiting)'} mode. Devices: Keyboard (IRQ 1), Disk (IRQ 14), Printer (IRQ 7), Network (IRQ 11).`
+        : `Simulador listo en modo ${initialMode === 'INTERRUPTS' ? 'INTERRUPCIONES (IRQ + ISR)' : 'SONDEO (Busy-Waiting Polling)'}. Dispositivos: Teclado (IRQ 1), Disco (IRQ 14), Impresora (IRQ 7), Red (IRQ 11).`
     );
+  }
+
+  private applyLanguageToState(lang: Language) {
+    Object.values(this.devices).forEach((dev) => {
+      const labels = DEVICE_LABELS[lang][dev.id];
+      dev.displayName = labels.displayName;
+      dev.name = labels.name;
+      dev.transferRateDesc = labels.transferRateDesc;
+      if (dev.activeFault !== 'NONE') {
+        dev.faultMessage = getFaultMessage(dev.id, dev.activeFault, lang);
+      }
+    });
+    if (this.tickCount === 0) {
+      this.cpu.currentTaskDescription =
+        lang === 'en'
+          ? 'Running user process PID 1024 (Matrix computation)'
+          : 'Ejecutando proceso de usuario PID 1024 (Cálculo matricial)';
+    }
+  }
+
+  public setLanguage(newLang: Language) {
+    if (this.lang === newLang) return;
+    this.lang = newLang;
+    this.applyLanguageToState(newLang);
   }
 
   public reset(mode?: IOMode) {
@@ -187,16 +218,20 @@ export class SimulatorEngine {
     this.tickCount = 0;
     this.devices = JSON.parse(JSON.stringify(INITIAL_DEVICES));
     this.cpu = JSON.parse(JSON.stringify(INITIAL_CPU_STATE));
+    this.applyLanguageToState(this.lang);
     this.completedRequests = [];
     this.failedRequests = [];
     this.logs = [];
     this.history = [];
     this.currentPollingWaitCount = 0;
+    const isEn = this.lang === 'en';
     this.addLog(
       'INFO',
       'KERNEL',
-      'Simulador Reiniciado',
-      `Registros limpios. Modo activo: ${this.mode}. Listo para procesar solicitudes.`
+      isEn ? 'Simulator Reset' : 'Simulador Reiniciado',
+      isEn
+        ? `Registers cleared. Active mode: ${this.mode}. Ready to process requests.`
+        : `Registros limpios. Modo activo: ${this.mode}. Listo para procesar solicitudes.`
     );
   }
 
@@ -208,11 +243,14 @@ export class SimulatorEngine {
       dev.registers.control.interruptEnable = newMode === 'INTERRUPTS';
       this.syncRegistersHex(dev);
     });
+    const isEn = this.lang === 'en';
     this.addLog(
       'INFO',
       'KERNEL',
-      'Cambio de Mecanismo de E/S',
-      `Modo cambiado a ${newMode === 'INTERRUPTS' ? 'INTERRUPCIONES (Asíncrono)' : 'SONDEO (Síncrono / Sondeo Activo)'}.`
+      isEn ? 'I/O Mechanism Switched' : 'Cambio de Mecanismo de E/S',
+      isEn
+        ? `Mode switched to ${newMode === 'INTERRUPTS' ? 'INTERRUPTS (Asynchronous)' : 'POLLING (Synchronous / Busy-Wait)'}.`
+        : `Modo cambiado a ${newMode === 'INTERRUPTS' ? 'INTERRUPCIONES (Asíncrono)' : 'SONDEO (Síncrono / Sondeo Activo)'}.`
     );
   }
 
@@ -245,12 +283,15 @@ export class SimulatorEngine {
 
     const targetDev = this.devices[requestParams.deviceType];
     targetDev.queue.push(newReq);
+    const isEn = this.lang === 'en';
 
     this.addLog(
       'INFO',
       'DEVICE',
-      `Solicitud encolada en ${targetDev.displayName}`,
-      `ID: ${newReq.id} | Proceso: ${newReq.processName} | Operación: ${newReq.operation} (${newReq.bytes} B) | Prioridad: ${newReq.priority}`,
+      isEn ? `Request enqueued on ${targetDev.displayName}` : `Solicitud encolada en ${targetDev.displayName}`,
+      isEn
+        ? `ID: ${newReq.id} | Process: ${newReq.processName} | Operation: ${newReq.operation} (${newReq.bytes} B) | Priority: ${newReq.priority}`
+        : `ID: ${newReq.id} | Proceso: ${newReq.processName} | Operación: ${newReq.operation} (${newReq.bytes} B) | Prioridad: ${newReq.priority}`,
       targetDev.id
     );
 
@@ -259,6 +300,7 @@ export class SimulatorEngine {
 
   public setFault(deviceType: DeviceType, fault: FaultType) {
     const dev = this.devices[deviceType];
+    const isEn = this.lang === 'en';
     dev.activeFault = fault;
     if (fault !== 'NONE') {
       dev.faultMessage = this.getFaultDescription(deviceType, fault);
@@ -266,8 +308,8 @@ export class SimulatorEngine {
       this.addLog(
         'WARNING',
         'DEVICE',
-        `Fallo inyectado en ${dev.displayName}`,
-        `Condición de error activa: ${dev.faultMessage}`,
+        isEn ? `Fault injected on ${dev.displayName}` : `Fallo inyectado en ${dev.displayName}`,
+        isEn ? `Active error condition: ${dev.faultMessage}` : `Condición de error activa: ${dev.faultMessage}`,
         deviceType
       );
     } else {
@@ -278,8 +320,8 @@ export class SimulatorEngine {
       this.addLog(
         'SUCCESS',
         'DEVICE',
-        `Fallo resuelto en ${dev.displayName}`,
-        'El controlador vuelve al estado operativo normal.',
+        isEn ? `Fault resolved on ${dev.displayName}` : `Fallo resuelto en ${dev.displayName}`,
+        isEn ? 'Controller returned to normal operating state.' : 'El controlador vuelve al estado operativo normal.',
         deviceType
       );
     }
@@ -287,12 +329,15 @@ export class SimulatorEngine {
 
   public setDeviceLatency(deviceType: DeviceType, latencyTicks: number) {
     const dev = this.devices[deviceType];
+    const isEn = this.lang === 'en';
     dev.baseLatencyTicks = Math.max(1, Math.min(100, latencyTicks));
     this.addLog(
       'INFO',
       'DEVICE',
-      `Latencia ajustada en ${dev.displayName}`,
-      `Nueva latencia base de servicio: ${dev.baseLatencyTicks} ticks de reloj.`,
+      isEn ? `Latency adjusted on ${dev.displayName}` : `Latencia ajustada en ${dev.displayName}`,
+      isEn
+        ? `New base service latency: ${dev.baseLatencyTicks} clock ticks.`
+        : `Nueva latencia base de servicio: ${dev.baseLatencyTicks} ticks de reloj.`,
       deviceType
     );
   }
@@ -342,11 +387,14 @@ export class SimulatorEngine {
         dev.registers.data = `0x${nextReq.bytes.toString(16).toUpperCase()} [${nextReq.payload.slice(0, 16)}]`;
         this.syncRegistersHex(dev);
 
+        const isEn = this.lang === 'en';
         this.addLog(
           'INFO',
           'DEVICE',
-          `Dispositivo ${dev.displayName} inició procesamiento`,
-          `Atendiendo ${nextReq.id} (${nextReq.operation}) | Duración estimada: ${dev.totalRequiredTicks} ticks`,
+          isEn ? `Device ${dev.displayName} started processing` : `Dispositivo ${dev.displayName} inició procesamiento`,
+          isEn
+            ? `Servicing ${nextReq.id} (${nextReq.operation}) | Est. duration: ${dev.totalRequiredTicks} ticks`
+            : `Atendiendo ${nextReq.id} (${nextReq.operation}) | Duración estimada: ${dev.totalRequiredTicks} ticks`,
           dev.id
         );
       }
@@ -363,6 +411,7 @@ export class SimulatorEngine {
           // Check for active fault injection
           const willFail = dev.activeFault !== 'NONE' || dev.currentRequest.willFail !== 'NONE';
           const activeFaultType = dev.activeFault !== 'NONE' ? dev.activeFault : dev.currentRequest.willFail!;
+          const isEn = this.lang === 'en';
 
           if (willFail) {
             dev.status = 'ERROR';
@@ -385,8 +434,10 @@ export class SimulatorEngine {
               this.addLog(
                 'ERROR',
                 'IRQ',
-                `Línea IRQ ${dev.irqNumber} (Excepción de Hardware en ${dev.displayName})`,
-                `Fallo detectado: ${failMsg}. El PIC envía vector al CPU para ejecutar ISR de error de E/S.`,
+                isEn ? `IRQ ${dev.irqNumber} Line (Hardware Exception on ${dev.displayName})` : `Línea IRQ ${dev.irqNumber} (Excepción de Hardware en ${dev.displayName})`,
+                isEn
+                  ? `Fault detected: ${failMsg}. PIC sends vector to CPU to execute I/O error ISR.`
+                  : `Fallo detectado: ${failMsg}. El PIC envía vector al CPU para ejecutar ISR de error de E/S.`,
                 dev.id,
                 dev.irqNumber
               );
@@ -395,8 +446,10 @@ export class SimulatorEngine {
               this.addLog(
                 'ERROR',
                 'DEVICE',
-                `Bit ERROR fijado en STATUS_REG de ${dev.displayName}`,
-                `Fallo: ${failMsg}. En espera de que el bucle de sondeo del CPU lea el registro de estado.`,
+                isEn ? `ERROR bit set in ${dev.displayName} STATUS_REG` : `Bit ERROR fijado en STATUS_REG de ${dev.displayName}`,
+                isEn
+                  ? `Fault: ${failMsg}. Waiting for CPU polling loop to read status register.`
+                  : `Fallo: ${failMsg}. En espera de que el bucle de sondeo del CPU lea el registro de estado.`,
                 dev.id
               );
             }
@@ -428,8 +481,10 @@ export class SimulatorEngine {
               this.addLog(
                 'IRQ',
                 'PIC',
-                `Disparo de Interrupción IRQ ${dev.irqNumber} (${dev.displayName})`,
-                `Solicitud ${finishedReq.id} completada en periférico. PIC interrumpe la CPU para guardar contexto y ejecutar ISR.`,
+                isEn ? `IRQ ${dev.irqNumber} Interrupt Triggered (${dev.displayName})` : `Disparo de Interrupción IRQ ${dev.irqNumber} (${dev.displayName})`,
+                isEn
+                  ? `Request ${finishedReq.id} completed on peripheral. PIC interrupts CPU to save context and run ISR.`
+                  : `Solicitud ${finishedReq.id} completada en periférico. PIC interrumpe la CPU para guardar contexto y ejecutar ISR.`,
                 dev.id,
                 dev.irqNumber
               );
@@ -443,8 +498,10 @@ export class SimulatorEngine {
               this.addLog(
                 'POLLING',
                 'DEVICE',
-                `Transferencia lista en ${dev.displayName} (DONE=1)`,
-                `Datos preparados en DATA_REG (${dev.registers.data}). En espera de detección por Sondeo de CPU.`,
+                isEn ? `Transfer ready on ${dev.displayName} (DONE=1)` : `Transferencia lista en ${dev.displayName} (DONE=1)`,
+                isEn
+                  ? `Data staged in DATA_REG (${dev.registers.data}). Awaiting CPU polling probe.`
+                  : `Datos preparados en DATA_REG (${dev.registers.data}). En espera de detección por Sondeo de CPU.`,
                 dev.id
               );
             }
@@ -454,19 +511,24 @@ export class SimulatorEngine {
     }
 
     // 3. CPU Clock Allocation & Mode Handling
+    const isEn = this.lang === 'en';
     if (this.mode === 'INTERRUPTS') {
       if (isrHandledThisTick && handledDevice) {
         // CPU was interrupted by hardware IRQ! Executes ISR
         this.cpu.activity = 'EXECUTING_ISR';
         this.cpu.isrCycles++;
         this.cpu.contextSwitches++;
-        this.cpu.currentTaskDescription = `Atendiendo ISR de IRQ ${handledDevice.irqNumber} (${handledDevice.displayName}): Copiando buffer a memoria RAM y despertando proceso.`;
+        this.cpu.currentTaskDescription = isEn
+          ? `Servicing IRQ ${handledDevice.irqNumber} ISR (${handledDevice.displayName}): Copying buffer to RAM and waking process.`
+          : `Atendiendo ISR de IRQ ${handledDevice.irqNumber} (${handledDevice.displayName}): Copiando buffer a memoria RAM y despertando proceso.`;
 
         this.addLog(
           'INFO',
           'CPU',
-          `CPU: Cambio de Contexto a ISR de IRQ ${handledDevice.irqNumber}`,
-          `Push registros a pila -> Lectura de tabla IVT -> Despacho de rutina de interrupción de ${handledDevice.displayName} -> Despertar proceso solicitante -> IRET.`
+          isEn ? `CPU: Context Switch to IRQ ${handledDevice.irqNumber} ISR` : `CPU: Cambio de Contexto a ISR de IRQ ${handledDevice.irqNumber}`,
+          isEn
+            ? `Push registers to stack -> IVT lookup -> Dispatch ${handledDevice.displayName} interrupt routine -> Wake requesting process -> IRET.`
+            : `Push registros a pila -> Lectura de tabla IVT -> Despacho de rutina de interrupción de ${handledDevice.displayName} -> Despertar proceso solicitante -> IRET.`
         );
       } else {
         // CPU executes useful user computations or idles if no work
@@ -478,7 +540,11 @@ export class SimulatorEngine {
         this.cpu.usefulCycles++;
         this.cpu.activeIrq = null;
         this.cpu.currentTaskDescription = anyDeviceBusyOrQueued
-          ? 'Ejecutando cálculos de usuario en paralelo (mientras los periféricos transfieren autónomamente vía controlador)'
+          ? isEn
+            ? 'Executing user computations in parallel (while peripherals transfer autonomously via controller)'
+            : 'Ejecutando cálculos de usuario en paralelo (mientras los periféricos transfieren autónomamente vía controlador)'
+          : isEn
+          ? 'Executing user processes on CPU (scientific compute, rendering, application logic)'
           : 'Ejecutando procesos de usuario en CPU (cálculo científico, renderizado, lógica de aplicación)';
       }
     } else {
@@ -516,12 +582,16 @@ export class SimulatorEngine {
         acknowledgedDev.registers.status.ready = true;
         this.syncRegistersHex(acknowledgedDev);
 
-        this.cpu.currentTaskDescription = `Sondeo exitoso: CPU detectó bit DONE en ${acknowledgedDev.displayName}. Transfiriendo datos de ${finishedReq.id} a RAM.`;
+        this.cpu.currentTaskDescription = isEn
+          ? `Polling succeeded: CPU detected DONE bit on ${acknowledgedDev.displayName}. Transferring ${finishedReq.id} data to RAM.`
+          : `Sondeo exitoso: CPU detectó bit DONE en ${acknowledgedDev.displayName}. Transfiriendo datos de ${finishedReq.id} a RAM.`;
         this.addLog(
           'SUCCESS',
           'CPU',
-          `Sondeo: Dispositivo ${acknowledgedDev.displayName} atendido`,
-          `El bucle de sondeo detectó STATUS_REG.DONE=1. Solicitud ${finishedReq.id} finalizada exitosamente.`
+          isEn ? `Polling: Device ${acknowledgedDev.displayName} serviced` : `Sondeo: Dispositivo ${acknowledgedDev.displayName} atendido`,
+          isEn
+            ? `Polling loop detected STATUS_REG.DONE=1. Request ${finishedReq.id} completed successfully.`
+            : `El bucle de sondeo detectó STATUS_REG.DONE=1. Solicitud ${finishedReq.id} finalizada exitosamente.`
         );
         this.currentPollingWaitCount = 0;
       } else {
@@ -536,21 +606,27 @@ export class SimulatorEngine {
           this.cpu.pollingCycles++;
           this.currentPollingWaitCount++;
 
-          this.cpu.currentTaskDescription = `Bucle de Sondeo Activo (Busy-Waiting): Verificando STATUS_REG de ${probedDev.displayName} (Valor: ${probedDev.registers.status.rawHex}). CPU ocupada al 100% sin hacer cómputo útil.`;
+          this.cpu.currentTaskDescription = isEn
+            ? `Active Polling Loop (Busy-Waiting): Checking ${probedDev.displayName} STATUS_REG (Value: ${probedDev.registers.status.rawHex}). CPU 100% occupied with zero useful compute.`
+            : `Bucle de Sondeo Activo (Busy-Waiting): Verificando STATUS_REG de ${probedDev.displayName} (Valor: ${probedDev.registers.status.rawHex}). CPU ocupada al 100% sin hacer cómputo útil.`;
 
           if (this.currentPollingWaitCount % 5 === 0) {
             this.addLog(
               'POLLING',
               'CPU',
-              `CPU en bucle de espera activa (Sondeando ${probedDev.displayName})`,
-              `Ciclo desperdiciado sondeando puertos de E/S. El proceso de usuario permanece detenido esperando al periférico lento.`
+              isEn ? `CPU in busy-wait loop (Polling ${probedDev.displayName})` : `CPU en bucle de espera activa (Sondeando ${probedDev.displayName})`,
+              isEn
+                ? 'Cycle wasted polling I/O ports. User process remains blocked waiting for slow peripheral.'
+                : 'Ciclo desperdiciado sondeando puertos de E/S. El proceso de usuario permanece detenido esperando al periférico lento.'
             );
           }
         } else {
           // No I/O pending, CPU can run user processes
           this.cpu.activity = 'USER_COMPUTE';
           this.cpu.usefulCycles++;
-          this.cpu.currentTaskDescription = 'Sin operaciones de E/S pendientes. CPU ejecutando tareas de usuario.';
+          this.cpu.currentTaskDescription = isEn
+            ? 'No pending I/O operations. CPU executing user tasks.'
+            : 'Sin operaciones de E/S pendientes. CPU ejecutando tareas de usuario.';
           this.currentPollingWaitCount = 0;
         }
       }
@@ -589,18 +665,7 @@ export class SimulatorEngine {
   }
 
   private getFaultDescription(devType: DeviceType, fault: FaultType): string {
-    switch (fault) {
-      case 'BUFFER_OVERFLOW':
-        return 'Desbordamiento de búfer FIFO en Teclado (Ráfaga de teclas supera capacidad de 64 bytes).';
-      case 'BAD_SECTOR':
-        return 'Error de lectura CRC en Disco (Sector LBA 0x3F8 defectuoso / fallo de cabezal).';
-      case 'PAPER_JAM':
-        return 'Atasco de papel en rodillo mecánico de Impresora (Sensor óptico bloqueado).';
-      case 'PACKET_LOSS':
-        return 'Pérdida de tramas Ethernet en Tarjeta de Red (Timeout de conexión / enlace caído).';
-      default:
-        return 'Fallo genérico de hardware de E/S.';
-    }
+    return getFaultMessage(devType, fault, this.lang);
   }
 
   private addLog(

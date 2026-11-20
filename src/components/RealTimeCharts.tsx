@@ -8,7 +8,9 @@
 
 import React from 'react';
 import { IOMode, DeviceType, IODevice, CPUState, IORequest } from '../types/io-simulator';
-import { Activity, Gauge, TrendingUp, Clock, HardDrive, Keyboard, Printer, Network } from 'lucide-react';
+import { Activity, Gauge, TrendingUp } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
+import { DEVICE_LABELS } from '../i18n/translations';
 
 interface RealTimeChartsProps {
   history: Array<{
@@ -36,6 +38,9 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
   failedRequests,
   tickCount,
 }) => {
+  const { lang } = useLanguage();
+  const isEs = lang === 'es';
+
   const currentEff =
     cpu.usefulCycles + cpu.pollingCycles + cpu.isrCycles > 0
       ? Math.round((cpu.usefulCycles / (cpu.usefulCycles + cpu.pollingCycles + cpu.isrCycles)) * 100)
@@ -50,7 +55,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
     const chartW = width - padX - 15;
     const chartH = height - padY - 20;
 
-    const pointsList = history.slice(-60); // Show last 60 ticks window for crisp responsive view
+    const pointsList = history.slice(-60);
     const count = Math.max(pointsList.length, 2);
 
     const svgPoints = pointsList.map((pt, i) => {
@@ -195,7 +200,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <Activity className="w-5 h-5 text-[#09843B] dark:text-emerald-400 shrink-0" />
             <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-              Gráficas de Comportamiento en Tiempo Real
+              {isEs ? 'Gráficas de Comportamiento en Tiempo Real' : 'Real-Time Behavioral Charts'}
             </h3>
             <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-[#09843B] dark:text-emerald-400 text-[10px] font-bold border border-emerald-200 dark:border-emerald-800 shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#09843B] dark:bg-emerald-400 animate-pulse" />
@@ -203,12 +208,16 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Cálculo dinámico basado en la simulación activa ({mode === 'INTERRUPTS' ? 'E/S por Interrupciones' : 'E/S por Sondeo'}).
+            {isEs
+              ? `Cálculo dinámico basado en la simulación activa (${mode === 'INTERRUPTS' ? 'E/S por Interrupciones' : 'E/S por Sondeo'}).`
+              : `Dynamic computation based on active simulation (${mode === 'INTERRUPTS' ? 'Interrupt-Driven I/O' : 'Polling I/O'}).`}
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 text-xs font-mono font-semibold shrink-0">
-          <span className="text-slate-500 dark:text-slate-400 font-sans">Eficiencia en Vivo:</span>
+          <span className="text-slate-500 dark:text-slate-400 font-sans">
+            {isEs ? 'Eficiencia en Vivo:' : 'Live Efficiency:'}
+          </span>
           <span className={`text-base font-bold ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
             {currentEff}%
           </span>
@@ -222,7 +231,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
-              <span>Eficiencia de CPU en Tiempo Real (% Útil vs Ticks)</span>
+              <span>
+                {isEs
+                  ? 'Eficiencia de CPU en Tiempo Real (% Útil vs Ticks)'
+                  : 'Real-Time CPU Efficiency (% Useful vs Ticks)'}
+              </span>
             </span>
             <span className={`font-mono text-xs font-bold shrink-0 ${mode === 'INTERRUPTS' ? 'text-[#09843B] dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
               {currentEff}%
@@ -234,9 +247,15 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-            <span>Útiles: <strong className="text-slate-800 dark:text-slate-200">{cpu.usefulCycles}</strong></span>
-            <span>Sondeo: <strong className="text-amber-700 dark:text-amber-400">{cpu.pollingCycles}</strong></span>
-            <span>ISR: <strong className="text-purple-700 dark:text-purple-300">{cpu.isrCycles}</strong></span>
+            <span>
+              {isEs ? 'Útiles:' : 'Useful:'} <strong className="text-slate-800 dark:text-slate-200">{cpu.usefulCycles}</strong>
+            </span>
+            <span>
+              {isEs ? 'Sondeo:' : 'Polling:'} <strong className="text-amber-700 dark:text-amber-400">{cpu.pollingCycles}</strong>
+            </span>
+            <span>
+              ISR: <strong className="text-purple-700 dark:text-purple-300">{cpu.isrCycles}</strong>
+            </span>
           </div>
         </div>
 
@@ -245,10 +264,14 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
               <Gauge className="w-4 h-4 text-[#09843B] dark:text-emerald-400 shrink-0" />
-              <span>Throughput Acumulado (Solicitudes Completadas)</span>
+              <span>
+                {isEs
+                  ? 'Throughput Acumulado (Solicitudes Completadas)'
+                  : 'Cumulative Throughput (Completed Requests)'}
+              </span>
             </span>
             <span className="font-mono text-xs font-bold text-[#09843B] dark:text-emerald-400 shrink-0">
-              {completedRequests.length} tareas
+              {completedRequests.length} {isEs ? 'tareas' : 'tasks'}
             </span>
           </div>
 
@@ -257,9 +280,17 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-            <span>Completadas: <strong className="text-[#09843B] dark:text-emerald-400">{completedRequests.length}</strong></span>
-            <span>Fallidas: <strong className="text-rose-600 dark:text-rose-400">{failedRequests.length}</strong></span>
-            <span>Ticks: <strong className="text-slate-800 dark:text-slate-200">{tickCount}</strong></span>
+            <span>
+              {isEs ? 'Completadas:' : 'Completed:'}{' '}
+              <strong className="text-[#09843B] dark:text-emerald-400">{completedRequests.length}</strong>
+            </span>
+            <span>
+              {isEs ? 'Fallidas:' : 'Failed:'}{' '}
+              <strong className="text-rose-600 dark:text-rose-400">{failedRequests.length}</strong>
+            </span>
+            <span>
+              Ticks: <strong className="text-slate-800 dark:text-slate-200">{tickCount}</strong>
+            </span>
           </div>
         </div>
       </div>
@@ -268,10 +299,12 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
       <div className="p-3.5 sm:p-4 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs pb-1 border-b border-slate-200/60 dark:border-slate-700">
           <span className="font-bold text-slate-800 dark:text-slate-200">
-            Tiempos de Espera y Latencia por Periférico (Calculado de la Simulación Activa)
+            {isEs
+              ? 'Tiempos de Espera y Latencia por Periférico (Calculado de la Simulación Activa)'
+              : 'Wait Times & Latency by Peripheral (Computed from Active Simulation)'}
           </span>
           <span className="text-[11px] text-slate-500 dark:text-slate-400">
-            Métricas acumuladas en la memoria de trabajo
+            {isEs ? 'Métricas acumuladas en la memoria de trabajo' : 'Metrics accumulated in working memory'}
           </span>
         </div>
 
@@ -290,20 +323,28 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
             return (
               <div key={devId} className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-700 space-y-1.5 shadow-2xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{dev.displayName}</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                    {DEVICE_LABELS[lang][devId].displayName}
+                  </span>
                   <span className="text-[10px] font-mono text-[#09843B] dark:text-emerald-400 font-bold">IRQ {dev.irqNumber}</span>
                 </div>
                 <div className="text-[11px] text-slate-600 dark:text-slate-300 space-y-0.5 font-mono">
                   <div className="flex justify-between">
-                    <span className="text-slate-400 dark:text-slate-500 font-sans">Espera:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-sans">
+                      {isEs ? 'Espera:' : 'Wait:'}
+                    </span>
                     <strong className="text-slate-800 dark:text-slate-200">{avgWait}t</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400 dark:text-slate-500 font-sans">Servicio:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-sans">
+                      {isEs ? 'Servicio:' : 'Service:'}
+                    </span>
                     <strong className="text-slate-800 dark:text-slate-200">{avgService}t</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400 dark:text-slate-500 font-sans">Atendidas:</span>
+                    <span className="text-slate-400 dark:text-slate-500 font-sans">
+                      {isEs ? 'Atendidas:' : 'Handled:'}
+                    </span>
                     <strong className="text-[#09843B] dark:text-emerald-400">{dev.metrics.totalHandled}</strong>
                   </div>
                 </div>
